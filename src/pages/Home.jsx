@@ -3,14 +3,14 @@ import useFetch from "../hooks/useFetch";
 
 export default function Home() {
   const { data, loading, error, refetch } = useFetch(
-    `${import.meta.env.VITE_API_URL}`
+    `${import.meta.env.VITE_API_URL}/books`
   );
 
   async function handleDelete(id) {
     if (window.confirm("Are you sure you want to delete this book?")) {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/v1/books/${id}`,
+          `${import.meta.env.VITE_API_URL}/books/${id}`,
           {
             method: "DELETE",
           }

@@ -29,7 +29,7 @@ export default function Form({ isEditMode }) {
   });
 
   const { data, error, refetch } = useFetch(
-    `${import.meta.env.VITE_API_URL}/${id}`
+    `${import.meta.env.VITE_API_URL}/books/${id}`
   );
 
   useEffect(() => {
@@ -40,7 +40,11 @@ export default function Form({ isEditMode }) {
         ISBN: data?.ISBN || "",
         publicationYear: data?.publicationYear || "",
         genres: data?.genres || [],
-        formats: data?.formats || { paperback: false, ebook: false, audiobook: false },
+        formats: data?.formats || {
+          paperback: false,
+          ebook: false,
+          audiobook: false,
+        },
         languages: data?.languages || [],
         pageCount: data?.pageCount || "",
         ratings: data?.ratings || [],
@@ -66,20 +70,23 @@ export default function Form({ isEditMode }) {
 
     try {
       if (isEditMode) {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/books/${id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (response.ok) {
           navigate(`/details/${id}`);
           refetch();
         }
       } else {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/books`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -202,7 +209,9 @@ export default function Form({ isEditMode }) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  publicationYear: e.target.value ? parseInt(e.target.value) : "",
+                  publicationYear: e.target.value
+                    ? parseInt(e.target.value)
+                    : "",
                 })
               }
               min={1450}
@@ -216,34 +225,42 @@ export default function Form({ isEditMode }) {
               Genres:
             </label>
             <div className="d-flex flex-wrap gap-3">
-              {["fiction", "non-fiction", "sci-fi", "biography", "history", "fantasy"].map(
-                (genre) => (
-                  <div key={genre} className="form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id={`genre-${genre}`}
-                      checked={formData.genres.includes(genre)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setFormData({
-                            ...formData,
-                            genres: [...formData.genres, genre],
-                          });
-                        } else {
-                          setFormData({
-                            ...formData,
-                            genres: formData.genres.filter((g) => g !== genre),
-                          });
-                        }
-                      }}
-                    />
-                    <label htmlFor={`genre-${genre}`} className="form-check-label">
-                      {genre.charAt(0).toUpperCase() + genre.slice(1)}
-                    </label>
-                  </div>
-                )
-              )}
+              {[
+                "fiction",
+                "non-fiction",
+                "sci-fi",
+                "biography",
+                "history",
+                "fantasy",
+              ].map((genre) => (
+                <div key={genre} className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={`genre-${genre}`}
+                    checked={formData.genres.includes(genre)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setFormData({
+                          ...formData,
+                          genres: [...formData.genres, genre],
+                        });
+                      } else {
+                        setFormData({
+                          ...formData,
+                          genres: formData.genres.filter((g) => g !== genre),
+                        });
+                      }
+                    }}
+                  />
+                  <label
+                    htmlFor={`genre-${genre}`}
+                    className="form-check-label"
+                  >
+                    {genre.charAt(0).toUpperCase() + genre.slice(1)}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -261,7 +278,10 @@ export default function Form({ isEditMode }) {
                       handleNestedChange("formats", format, e.target.checked);
                     }}
                   />
-                  <label htmlFor={`format-${format}`} className="form-check-label">
+                  <label
+                    htmlFor={`format-${format}`}
+                    className="form-check-label"
+                  >
                     {format.charAt(0).toUpperCase() + format.slice(1)}
                   </label>
                 </div>
@@ -399,7 +419,9 @@ export default function Form({ isEditMode }) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  tags: e.target.value.split(",").map((tag) => tag.trim().toLowerCase()),
+                  tags: e.target.value
+                    .split(",")
+                    .map((tag) => tag.trim().toLowerCase()),
                 })
               }
             />

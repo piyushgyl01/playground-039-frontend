@@ -5,7 +5,7 @@ export default function Details() {
   const { id } = useParams();
 
   const { data, loading, error } = useFetch(
-    `${import.meta.env.VITE_API_URL}/${id}`
+    `${import.meta.env.VITE_API_URL}/books/${id}`
   );
 
   // Calculate average rating
